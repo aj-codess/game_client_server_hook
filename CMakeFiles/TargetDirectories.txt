@@ -1,3 +1,0 @@
-/home/aj/code/Berita/game_client_server_hook/CMakeFiles/main.dir
-/home/aj/code/Berita/game_client_server_hook/CMakeFiles/edit_cache.dir
-/home/aj/code/Berita/game_client_server_hook/CMakeFiles/rebuild_cache.dir
