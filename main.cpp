@@ -1,11 +1,32 @@
 #include <iostream>
-#include <ostring>
+#include <string>
+#include <server_hook.h>
+
+#include <boost/asio.hpp>
 
 using namespace std;
 
-int main(){
+class server_init{
+    public:
+    server_init(boost::asio::io_context& ioc, domain_details domain)
+    :client_server(ioc,domain){
 
-cout<<"client server "<<endl;
+        client_server.init();
+
+    };
+
+    private:
+    server_hook client_server;
+};
+
+int main(){
+    domain_details endpoint={"localhost","8080"};
+
+    boost::asio::io_context ioc;
+
+    server_init operands(ioc,endpoint);
+
+    ioc.run();
 
     return 0;
 }
