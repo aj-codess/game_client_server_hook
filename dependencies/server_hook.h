@@ -4,6 +4,7 @@
 #include <string>
 
 #include <boost/asio.hpp>
+#include <boost/asio/spawn.hpp>
 
 using namespace std;
 
@@ -28,7 +29,6 @@ class server_hook{
 
         return running;
     };
-    void connector();
 
     private:
     boost::asio::io_context& ioc;
@@ -36,6 +36,10 @@ class server_hook{
     boost::asio::ip::tcp::resolver resolver;
     boost::asio::ip::tcp::resolver::results_type resolved_addr;
     boost::asio::ip::tcp::socket socket;
+    void connector();
+    void session(boost::asio::yield_context yield);
+    void read(std::function<void()> callback);
+    void write(std::function<void()> callback);
 };
 
 
@@ -50,7 +54,7 @@ void server_hook::init(){
 
     } else{
 
-        this->connector();
+            this->connector();
 
     };
 
@@ -68,9 +72,77 @@ void server_hook::connector(){
 
         } else{
 
-            
+            boost::asio::spawn(this->socket.get_executor(),[&](boost::asio::yield_context yield){
+
+                this->session(yield);
+
+            });
 
         };
+
+    });
+
+};
+
+
+
+
+void server_hook::session(boost::asio::yield_context yield){
+
+        for(;;){
+
+            bool breaker=false;
+
+            try{
+
+                this->write([](){
+
+                });
+
+                this->read([](){
+
+                });
+
+
+            } catch(const std::exception& e){
+                
+                cout<<"Error with session -"<<e.what()<<endl;
+
+                breaker=true;
+
+            };
+
+
+            if(breaker==true){
+
+                break;
+
+            };
+
+        };
+
+};
+
+
+
+void server_hook::read(std::function<void()> callback){
+
+    this->socket.async_read_some(boost::asio::buffer(data,size),[&](boost::system::error_code ec,std::size_t byte){
+
+
+
+    });
+
+};
+
+
+
+
+void server_hook::write(std::function<void()> callback){
+
+    this->socket.async_write_some(boost::asio::buffer(data,size),[&](boost::system::error_code ec,std::size_t byte){
+
+
 
     });
 
