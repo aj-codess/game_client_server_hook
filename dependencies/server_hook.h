@@ -8,6 +8,11 @@
 
 using namespace std;
 
+struct payload_struct{
+
+};
+
+
 struct domain_details{
     std::string host;
     std::string port;
@@ -33,13 +38,15 @@ class server_hook{
     private:
     boost::asio::io_context& ioc;
     domain_details domain;
-    boost::asio::ip::tcp::resolver resolver;
-    boost::asio::ip::tcp::resolver::results_type resolved_addr;
-    boost::asio::ip::tcp::socket socket;
+    boost::asio::ip::udp::resolver resolver;
+    boost::asio::ip::udp::resolver::results_type resolved_addr;
+    boost::asio::ip::udp::socket socket;
     void connector();
     void session(boost::asio::yield_context yield);
     void read(std::function<void()> callback);
     void write(std::function<void()> callback);
+    std::vector<payload_struct> write_queue;
+    std::vector<payload_struct> read_queue;
 };
 
 
@@ -89,10 +96,6 @@ void server_hook::connector(){
 
 void server_hook::session(boost::asio::yield_context yield){
 
-        for(;;){
-
-            bool breaker=false;
-
             try{
 
                 this->write([](){
@@ -111,15 +114,6 @@ void server_hook::session(boost::asio::yield_context yield){
                 breaker=true;
 
             };
-
-
-            if(breaker==true){
-
-                break;
-
-            };
-
-        };
 
 };
 
