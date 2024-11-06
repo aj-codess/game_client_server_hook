@@ -28,12 +28,13 @@ class server_hook{
     bool isRunning(){
         bool running=false;
 
-        // if(){
-        //     running=true;
-        // };
+        if(){
+            running=true;
+        };
 
         return running;
     };
+    std::vector<payload_struct> payload_stack;
 
     private:
     boost::asio::io_context& ioc;
@@ -98,14 +99,16 @@ void server_hook::session(boost::asio::yield_context yield){
 
             try{
 
-                this->write([](){
+                //ping network to keep alive
+                if(this->payload_stack.size=0){
 
-                });
+                    this->keep_alive();
 
-                this->read([](){
+                } else{
 
-                });
+                    this->write()
 
+                };
 
             } catch(const std::exception& e){
                 
